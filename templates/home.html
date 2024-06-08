@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Graph Generator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 20px;
+            max-width: 80%;
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .download-link {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <h1 class="m-0">Dynamic Graph Generator</h1>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </nav>
+        <form method="POST" action="/" enctype="multipart/form-data" class="border p-4 rounded shadow">
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="update-nature" class="mr-2">Update Nature:</label>
+                    <select name="update-nature" class="form-control" id="update-nature">
+                        <option value="uniform">Uniform</option>
+                        <option value="preferential">Preferential</option>
+                        <option value="power-law">Power Law</option>
+                        <option value="exponential">Exponential</option>
+                    </select>
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="batch-size" class="mr-2">Batch Size:</label>
+                    <input type="number" name="batch-size" class="form-control" id="batch-size" min="0" step="1">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="batch-size-ratio" class="mr-2">Batch Size Ratio:</label>
+                    <input type="number" name="batch-size-ratio" class="form-control" id="batch-size-ratio" min="0" max="1" step="0.000001">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="edge-insertions" class="mr-2">Edge Insertions:</label>
+                    <input type="number" name="edge-insertions" class="form-control" id="edge-insertions" min="0" max="1" step="0.000001">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="edge-deletions" class="mr-2">Edge Deletions:</label>
+                    <input type="number" name="edge-deletions" class="form-control" id="edge-deletions" min="0" max="1" step="0.000001">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="vertex-insertions" class="mr-2">Vertex Insertions:</label>
+                    <input type="number" name="vertex-insertions" class="form-control" id="vertex-insertions" min="0" max="1" step="0.000001">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="vertex-deletions" class="mr-2">Vertex Deletions:</label>
+                    <input type="number" name="vertex-deletions" class="form-control" id="vertex-deletions" min="0" max="1" step="0.000001">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="vertex-growth-rate" class="mr-2">Vertex Growth Rate:</label>
+                    <input type="number" name="vertex-growth-rate" class="form-control" id="vertex-growth-rate" min="0" step="0.000001">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="min-degree" class="mr-2">Min Degree:</label>
+                    <input type="number" name="min-degree" class="form-control" id="min-degree" min="0" step="1">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="max-degree" class="mr-2">Max Degree:</label>
+                    <input type="number" name="max-degree" class="form-control" id="max-degree" min="0" step="1">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="max-diameter" class="mr-2">Max Diameter:</label>
+                    <input type="number" name="max-diameter" class="form-control" id="max-diameter" min="0" step="1">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="preserve-k-core" class="mr-2">Preserve K-Core:</label>
+                    <input type="number" name="preserve-k-core" class="form-control" id="preserve-k-core" min="0" step="1">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="multi-batch" class="mr-2">Batch Count:</label>
+                    <input type="number" name="multi-batch" class="form-control" id="multi-batch" min="0" step="1">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="seed" class="mr-2">Seed:</label>
+                    <input type="number" name="seed" class="form-control" id="seed" min="0" step="1">
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="input-format" class="mr-2">Input Format:</label>
+                    <select name="input-format" class="form-control" id="input-format">
+                        <option value="matrix-market">Matrix Market</option>
+                        <option value="snap-temporal">Snap Temporal</option>
+                        <option value="edgelist">Edgelist</option>
+                    </select>
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="input-transform">Input Transforms:</label>
+                    <select name="input-transform" class="form-control" id="input-transform">
+                        <option value="">None</option>
+                        <option value="transpose">Transpose</option>
+                        <option value="unsymmetrize">Unsymmetrize</option>
+                        <option value="symmetrize">Symmetrize</option>
+                        <option value="loop-deadends">Loop Deadends</option>
+                        <option value="loop-vertices">Loop Vertices</option>
+                        <option value="clear-weights">Clear Weights</option>
+                        <option value="set-weights">Set Weights</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <label for="output-format" class="mr-2">Output Format:</label>
+                    <select name="output-format" class="form-control" id="output-format">
+                        <option value="edgelist">Edgelist</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="allow-duplicate-edges" class="form-check-input" id="allow-duplicate-edges">
+                        <label for="allow-duplicate-edges" class="form-check-label">Allow Duplicate Edges</label>
+                    </div>
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="allow-duplicate-vertices" class="form-check-input" id="allow-duplicate-vertices">
+                        <label for="allow-duplicate-vertices" class="form-check-label">Allow Duplicate Vertices</label>
+                    </div>
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="preserve-degree-distribution" class="form-check-input" id="preserve-degree-distribution">
+                        <label for="preserve-degree-distribution" class="form-check-label">Preserve Degree Distribution</label>
+                    </div>
+                </div>
+                <div class="form-group col-6 col-md-4 col-lg-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="preserve-communities" class="form-check-input" id="preserve-communities">
+                        <label for="preserve-communities" class="form-check-label">Preserve Communities</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="file" class="mr-2">Input Graph:</label>
+                <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="file">
+                    <label class="custom-file-label" for="file">Choose file</label>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        {% if output_file %}
+            <div class="download-link">
+                <a href="{{ url_for('download') }}" class="btn btn-success" onclick="hideDownloadLink()">Download Output Graph</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+        function hideDownloadLink() {
+            $(".download-link").hide();
+        }
+    </script>
+</body>
+</html>
