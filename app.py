@@ -153,8 +153,7 @@ def home():
 
         
         print("Command run: ", " ".join(clean_args))
-        output_file_path = 'output.txt'
-        subprocess.run(clean_args + ['--output-file', output_file_path])
+        subprocess.run(clean_args)
 
         return render_template('home.html', output_file=True)
 
