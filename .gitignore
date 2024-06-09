@@ -9,4 +9,12 @@ uploads/*
 output/*
 output.zip
 
+# vscode
+.vscode
+
+# graph samples
+graphs
+
+# Other
+temp 
 

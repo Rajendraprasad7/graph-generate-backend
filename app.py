@@ -92,6 +92,7 @@ def home():
         output_format = request.form['output-format']
         input_format = request.form['input-format']
         input_transform = request.form['input-transform']
+        probability_distribution = '"'+request.form['probability-distribution']+'"'
 
         # Clear the entire output directory
         if os.path.exists(output_directory):
@@ -139,7 +140,8 @@ def home():
             '--input-format', input_format,
             '--output-dir', output_directory,
             '--output-prefix', input_file_path.split('/')[-1].split('.')[0],
-            '--input-transform', input_transform
+            '--input-transform', input_transform,
+            '--probability-distribution', probability_distribution
         ]
 
         clean_args = ['./main']
@@ -157,13 +159,12 @@ def home():
         if preserve_communities == 'checked':
             clean_args.append('--preserve-communities')
 
-        
-        print("Command run: ", " ".join(clean_args))
-        command_log = CommandLog(username=current_user.username, command=" ".join(clean_args))
+        command = " ".join(clean_args)
+        print("Command run: ", command)
+        command_log = CommandLog(username=current_user.username, command=command)
         db.session.add(command_log)
         db.session.commit()
-
-        subprocess.run(clean_args)
+        subprocess.run(command, shell=True)
 
         return render_template('home.html', output_file=True)
 
