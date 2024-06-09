@@ -60,6 +60,12 @@ class LoginForm(FlaskForm):
     password = PasswordField(validators=[InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField('Login')
 
+class CommandLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False)
+    command = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.current_timestamp())
+
 @app.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
@@ -153,6 +159,10 @@ def home():
 
         
         print("Command run: ", " ".join(clean_args))
+        command_log = CommandLog(username=current_user.username, command=" ".join(clean_args))
+        db.session.add(command_log)
+        db.session.commit()
+
         subprocess.run(clean_args)
 
         return render_template('home.html', output_file=True)
