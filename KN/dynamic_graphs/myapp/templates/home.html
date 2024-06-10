@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+        label, input, select, textarea {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Home</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <label for="update_nature">Update Nature:</label>
+        <input type="text" id="update_nature" name="update_nature" required>
+        
+        <label for="batch_size">Batch Size:</label>
+        <input type="number" id="batch_size" name="batch_size" required>
+        
+        <label for="batch_size_ratio">Batch Size Ratio:</label>
+        <input type="number" step="0.01" id="batch_size_ratio" name="batch_size_ratio" required>
+        
+        <label for="edge_insertions">Edge Insertions:</label>
+        <input type="number" id="edge_insertions" name="edge_insertions" required>
+        
+        <label for="edge_deletions">Edge Deletions:</label>
+        <input type="number" id="edge_deletions" name="edge_deletions" required>
+        
+        <label for="allow_duplicate_edges">Allow Duplicate Edges:</label>
+        <input type="checkbox" id="allow_duplicate_edges" name="allow_duplicate_edges">
+        
+        <label for="vertex_insertions">Vertex Insertions:</label>
+        <input type="number" id="vertex_insertions" name="vertex_insertions" required>
+        
+        <label for="vertex_deletions">Vertex Deletions:</label>
+        <input type="number" id="vertex_deletions" name="vertex_deletions" required>
+        
+        <label for="vertex_growth_rate">Vertex Growth Rate:</label>
+        <input type="number" step="0.01" id="vertex_growth_rate" name="vertex_growth_rate" required>
+        
+        <label for="allow_duplicate_vertices">Allow Duplicate Vertices:</label>
+        <input type="checkbox" id="allow_duplicate_vertices" name="allow_duplicate_vertices">
+        
+        <label for="min_degree">Min Degree:</label>
+        <input type="number" id="min_degree" name="min_degree" required>
+        
+        <label for="max_degree">Max Degree:</label>
+        <input type="number" id="max_degree" name="max_degree" required>
+        
+        <label for="max_diameter">Max Diameter:</label>
+        <input type="number" id="max_diameter" name="max_diameter" required>
+        
+        <label for="preserve_degree_distribution">Preserve Degree Distribution:</label>
+        <input type="checkbox" id="preserve_degree_distribution" name="preserve_degree_distribution">
+        
+        <label for="preserve_communities">Preserve Communities:</label>
+        <input type="checkbox" id="preserve_communities" name="preserve_communities">
+        
+        <label for="preserve_k_core">Preserve k-Core:</label>
+        <input type="number" id="preserve_k_core" name="preserve_k_core" required>
+        
+        <label for="multi_batch">Multi Batch:</label>
+        <input type="number" id="multi_batch" name="multi_batch" required>
+        
+        <label for="seed">Seed:</label>
+        <input type="number" id="seed" name="seed" required>
+        
+        <label for="output_format">Output Format:</label>
+        <input type="text" id="output_format" name="output_format" required>
+        
+        <label for="input_format">Input Format:</label>
+        <input type="text" id="input_format" name="input_format" required>
+        
+        <label for="input_transform">Input Transform:</label>
+        <input type="text" id="input_transform" name="input_transform" required>
+        
+        <label for="probability_distribution">Probability Distribution:</label>
+        <input type="text" id="probability_distribution" name="probability_distribution" required>
+        
+        <label for="file">Input Graph File:</label>
+        <input type="file" id="file" name="file" required>
+        
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if output_file %}
+    <a href="{% url 'download' %}">Download Output</a>
+    {% endif %}
+</body>
+</html>
