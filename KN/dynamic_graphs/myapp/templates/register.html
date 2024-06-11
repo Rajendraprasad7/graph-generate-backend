@@ -2,14 +2,70 @@
 <html>
 <head>
     <title>Register</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 400px;
+            margin-top: 100px;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .text-center {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h2>Register</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-    <a href="{% url 'login' %}">Login</a>
+    <div class="container">
+        <h1>Register</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="form-group row">
+                <label for="{{ form.username.id_for_label }}" class="col-sm-4 col-form-label">{{ form.username.label }}</label>
+                <div class="col-sm-8">
+                    {{ form.username }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="{{ form.email.id_for_label }}" class="col-sm-4 col-form-label">{{ form.email.label }}</label>
+                <div class="col-sm-8">
+                    {{ form.email }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="{{ form.password1.id_for_label }}" class="col-sm-4 col-form-label">{{ form.password1.label }}</label>
+                <div class="col-sm-8">
+                    {{ form.password1 }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="{{ form.password2.id_for_label }}" class="col-sm-4 col-form-label">{{ form.password2.label }}</label>
+                <div class="col-sm-8">
+                    {{ form.password2 }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+        <div class="text-center">
+            Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+    </div>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -100,7 +100,7 @@ def home(request):
             '--input-graph', input_file_path,
             '--output-format', output_format,
             '--input-format', input_format,
-            '--output-dir', output_directory,
+            '--output-dir', output_directory+os.sep,
             '--output-prefix', file.name.split('.')[0],
             '--input-transform', input_transform,
             '--probability-distribution', probability_distribution
@@ -122,6 +122,7 @@ def home(request):
             clean_args.append('--preserve-communities')
 
         command = " ".join(clean_args)
+        print("command: ", command)
         command_log = CommandLog(username=request.user.username, command=command)
         command_log.save()
         subprocess.run(command, shell=True)
@@ -143,5 +144,19 @@ def download(request):
 
 @login_required
 def user_logout(request):
+    if os.path.exists(settings.MEDIA_ROOT):
+        output_directory = os.path.join(settings.MEDIA_ROOT, 'output')
+        if os.path.exists(output_directory):
+            shutil.rmtree(output_directory)
+        os.makedirs(output_directory)
+
+        if os.path.exists(output_directory + '.zip'):
+            os.remove(output_directory + '.zip')
+
+        uploads_directory = os.path.join(settings.MEDIA_ROOT, 'uploads')
+        if os.path.exists(uploads_directory):
+            shutil.rmtree(uploads_directory)
+        os.makedirs(uploads_directory)
+
     logout(request)
     return redirect('login')
