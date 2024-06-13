@@ -34,6 +34,9 @@ def user_login(request):
 
 @login_required
 def home(request):
+    graphs_directory = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sample_graphs')
+    graph_files = os.listdir(graphs_directory)
+    context = {'graph_files': graph_files}
     if request.method == 'POST':
         update_nature = request.POST['update-nature']
         batch_size = request.POST['batch-size']
@@ -57,6 +60,7 @@ def home(request):
         input_format = request.POST['input-format']
         input_transform = request.POST['input-transform']
         probability_distribution = '"' + request.POST['probability-distribution'] + '"'
+        input_file_name = request.POST['graph-file']
 
         output_directory = os.path.join(settings.MEDIA_ROOT, 'output')
         if os.path.exists(output_directory):
@@ -71,15 +75,21 @@ def home(request):
             shutil.rmtree(uploads_directory)
         os.makedirs(uploads_directory)
 
-        if 'file' not in request.FILES:
-            return HttpResponse('No file uploaded')
-        file = request.FILES['file']
-        if file.name == '':
-            return HttpResponse('No selected file')
-        input_file_path = os.path.join(uploads_directory, file.name)
-        with open(input_file_path, 'wb+') as destination:
-            for chunk in file.chunks():
-                destination.write(chunk)
+        if input_file_name == '':
+            if 'file' not in request.FILES:
+                context['output_file'] = False
+                return HttpResponse('No file uploaded')
+            file = request.FILES['file']
+            input_file_name = file.name
+            if input_file_name == '':
+                context['output_file'] = False
+                return HttpResponse('No selected file')
+            input_file_path = os.path.join(uploads_directory, input_file_name)
+            with open(input_file_path, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+        else:
+            input_file_path = os.path.join(graphs_directory, input_file_name)
 
         args = [
             './main',
@@ -101,7 +111,7 @@ def home(request):
             '--output-format', output_format,
             '--input-format', input_format,
             '--output-dir', output_directory+os.sep,
-            '--output-prefix', file.name.split('.')[0],
+            '--output-prefix', input_file_name.split('.')[0],
             '--input-transform', input_transform,
             '--probability-distribution', probability_distribution
         ]
@@ -126,10 +136,10 @@ def home(request):
         command_log = CommandLog(username=request.user.username, command=command)
         command_log.save()
         subprocess.run(command, shell=True)
-
-        return render(request, 'home.html', {'output_file': True})
-
-    return render(request, 'home.html', {'output_file': False})
+        context['output_file'] = True
+        return render(request, 'home.html', context)
+    context['output_file'] = False
+    return render(request, 'home.html', context)
 
 @login_required
 def download(request):
