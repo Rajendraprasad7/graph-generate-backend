@@ -27,10 +27,10 @@
 </head>
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
             <div class="container-fluid d-flex justify-content-between align-items-center">
-                <h1 class="m-0">Dynamic Graph Generator</h1>
-                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+                <h1 class="navbar-brand m-0">Dynamic Graph Generator</h1>
+                <a href="{% url 'logout' %}" class="btn btn-light me-2">Logout</a>
             </div>
         </nav>
         <form method="POST" action="/" enctype="multipart/form-data" class="border p-4 rounded shadow">

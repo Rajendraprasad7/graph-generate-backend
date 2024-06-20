@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm
 from .models import CommandLog
 import os
+import json
 import shutil
 import subprocess
 from django.http import HttpResponse
@@ -62,6 +63,11 @@ def home(request):
         probability_distribution = '"' + request.POST['probability-distribution'] + '"'
         input_file_name = request.POST['graph-file']
 
+        properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
+        if os.path.exists(properties_directory):
+            shutil.rmtree(properties_directory)
+        os.makedirs(properties_directory)
+
         output_directory = os.path.join(settings.MEDIA_ROOT, 'output')
         if os.path.exists(output_directory):
             shutil.rmtree(output_directory)
@@ -113,7 +119,8 @@ def home(request):
             '--output-dir', output_directory+os.sep,
             '--output-prefix', input_file_name.split('.')[0],
             '--input-transform', input_transform,
-            '--probability-distribution', probability_distribution
+            '--probability-distribution', probability_distribution,
+            '--show-properties', properties_directory+os.sep
         ]
 
         clean_args = ['./main']
@@ -137,9 +144,21 @@ def home(request):
         command_log.save()
         subprocess.run(command, shell=True)
         context['output_file'] = True
-        return render(request, 'home.html', context)
+        return redirect('properties')
     context['output_file'] = False
     return render(request, 'home.html', context)
+
+@login_required
+def properties(request):
+    properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
+    graphs = []
+    for file in os.listdir(properties_directory):
+        json_file_path = os.path.join(properties_directory, file)
+        with open(json_file_path, 'r') as file:
+            graph_properties = json.load(file)
+        graphs.append([int(file.name.split(os.sep)[-1].split('_')[-1]), graph_properties])
+    context = {'graphs': sorted(graphs)}
+    return render(request, 'properties.html', context)
 
 @login_required
 def download(request):
@@ -167,6 +186,11 @@ def user_logout(request):
         if os.path.exists(uploads_directory):
             shutil.rmtree(uploads_directory)
         os.makedirs(uploads_directory)
+
+        properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
+        if os.path.exists(properties_directory):
+            shutil.rmtree(properties_directory)
+        os.makedirs(properties_directory)
 
     logout(request)
     return redirect('login')
