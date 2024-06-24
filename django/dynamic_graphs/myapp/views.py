@@ -11,6 +11,9 @@ from django.http import HttpResponse
 from zipfile import ZipFile
 from django.conf import settings
 from pathlib import Path
+from PIL import Image
+import numpy as np
+
 
 def register(request):
     if request.method == 'POST':
@@ -72,6 +75,11 @@ def home(request):
         if os.path.exists(output_directory):
             shutil.rmtree(output_directory)
         os.makedirs(output_directory)
+
+        adjacencies_directory = os.path.join(settings.MEDIA_ROOT, 'adjacency_matrices')
+        if os.path.exists(adjacencies_directory):
+            shutil.rmtree(adjacencies_directory)
+        os.makedirs(adjacencies_directory)
 
         if os.path.exists(output_directory + '.zip'):
             os.remove(output_directory + '.zip')
@@ -156,6 +164,27 @@ def properties(request):
         json_file_path = os.path.join(properties_directory, file)
         with open(json_file_path, 'r') as file:
             graph_properties = json.load(file)
+
+        # Assuming adjacency_matrix is your original matrix
+        adjacency_matrix = np.array(graph_properties['adjacencyMatrix'])
+
+        # Convert to uint8 (8-bit unsigned integer) and invert colors
+        img_array = ((1 - adjacency_matrix) * 255).astype(np.uint8)
+
+        # Create image
+        img = Image.fromarray(img_array, mode='L')
+
+        # Resize image to 250x250
+        img_resized = img.resize((250, 250), Image.Resampling.NEAREST)
+        
+        # Save the image
+        img_filename = f"adjacency_matrix_{file.name.split(os.sep)[-1].split('_')[-1]}.png"
+        img_path = os.path.join(settings.MEDIA_ROOT, 'adjacency_matrices', img_filename)
+        os.makedirs(os.path.dirname(img_path), exist_ok=True)
+        img_resized.save(img_path)
+        
+        # Add image path to graph properties
+        graph_properties['adjacency_matrix_image'] = os.path.join(settings.MEDIA_URL, 'adjacency_matrices', img_filename)
         graphs.append([int(file.name.split(os.sep)[-1].split('_')[-1]), graph_properties])
     context = {'graphs': sorted(graphs)}
     return render(request, 'properties.html', context)
@@ -191,6 +220,11 @@ def user_logout(request):
         if os.path.exists(properties_directory):
             shutil.rmtree(properties_directory)
         os.makedirs(properties_directory)
+
+        adjacencies_directory = os.path.join(settings.MEDIA_ROOT, 'adjacency_matrices')
+        if os.path.exists(adjacencies_directory):
+            shutil.rmtree(adjacencies_directory)
+        os.makedirs(adjacencies_directory)
 
     logout(request)
     return redirect('login')

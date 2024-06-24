@@ -1,7 +1,7 @@
 ### for starting 
 
 
-- from KN folder
+- from django folder
 
 ```bash 
 cd dynamic_graphs
