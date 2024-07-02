@@ -65,6 +65,7 @@ def home(request):
         input_transform = request.POST['input-transform']
         probability_distribution = '"' + request.POST['probability-distribution'] + '"'
         input_file_name = request.POST['graph-file']
+        graph_type = request.POST['graph-type']
 
         properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
         if os.path.exists(properties_directory):
@@ -128,7 +129,9 @@ def home(request):
             '--output-prefix', input_file_name.split('.')[0],
             '--input-transform', input_transform,
             '--probability-distribution', probability_distribution,
-            '--show-properties', properties_directory+os.sep
+            '--show-properties', properties_directory+os.sep,
+            '--graph-type', graph_type
+
         ]
 
         clean_args = ['./main']
