@@ -43,7 +43,7 @@
    <div class="row row-cols-1 row-cols-md-2 g-4">
      {% for file_name, properties in graphs %}
        <div class="col">
-         <div class="card h-100">
+        <div class="card h-100 {% if properties.satisfyConstraints == 1 %}bg-success bg-opacity-25{% elif properties.satisfyConstraints == 0 %}bg-danger bg-opacity-25{% endif %}">
            <div class="card-header">
              {{ file_name }}
            </div>

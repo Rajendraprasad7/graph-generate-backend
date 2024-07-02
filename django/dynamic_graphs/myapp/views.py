@@ -54,10 +54,10 @@ def home(request):
         allow_duplicate_vertices = 'checked' if 'allow-duplicate-vertices' in request.POST else 'unchecked'
         min_degree = request.POST['min-degree']
         max_degree = request.POST['max-degree']
+        min_diameter = request.POST['min-diameter']
         max_diameter = request.POST['max-diameter']
         preserve_degree_distribution = 'checked' if 'preserve-degree-distribution' in request.POST else 'unchecked'
         preserve_communities = 'checked' if 'preserve-communities' in request.POST else 'unchecked'
-        preserve_k_core = request.POST['preserve-k-core']
         multi_batch = request.POST['multi-batch']
         seed = request.POST['seed']
         output_format = request.POST['output-format']
@@ -118,8 +118,8 @@ def home(request):
             '--vertex-growth-rate', vertex_growth_rate,
             '--min-degree', min_degree,
             '--max-degree', max_degree,
+            '--min-diameter', min_diameter,
             '--max-diameter', max_diameter,
-            '--preserve-k-core', preserve_k_core,
             '--multi-batch', multi_batch,
             '--seed', seed,
             '--input-graph', input_file_path,
