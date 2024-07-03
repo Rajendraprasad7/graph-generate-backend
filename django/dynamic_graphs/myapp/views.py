@@ -48,14 +48,16 @@ def home(request):
         edge_insertions = request.POST['edge-insertions']
         edge_deletions = request.POST['edge-deletions']
         allow_duplicate_edges = 'checked' if 'allow-duplicate-edges' in request.POST else 'unchecked'
-        vertex_insertions = request.POST['vertex-insertions']
-        vertex_deletions = request.POST['vertex-deletions']
+        # vertex_insertions = request.POST['vertex-insertions']
+        # vertex_deletions = request.POST['vertex-deletions']
         vertex_growth_rate = request.POST['vertex-growth-rate']
         allow_duplicate_vertices = 'checked' if 'allow-duplicate-vertices' in request.POST else 'unchecked'
         min_degree = request.POST['min-degree']
         max_degree = request.POST['max-degree']
         min_diameter = request.POST['min-diameter']
         max_diameter = request.POST['max-diameter']
+        min_scc = request.POST['min-scc']
+        max_scc = request.POST['max-scc']
         preserve_degree_distribution = 'checked' if 'preserve-degree-distribution' in request.POST else 'unchecked'
         preserve_communities = 'checked' if 'preserve-communities' in request.POST else 'unchecked'
         multi_batch = request.POST['multi-batch']
@@ -113,13 +115,15 @@ def home(request):
             '--batch-size-ratio', batch_size_ratio,
             '--edge-insertions', edge_insertions,
             '--edge-deletions', edge_deletions,
-            '--vertex-insertions', vertex_insertions,
-            '--vertex-deletions', vertex_deletions,
+            # '--vertex-insertions', vertex_insertions,
+            # '--vertex-deletions', vertex_deletions,
             '--vertex-growth-rate', vertex_growth_rate,
             '--min-degree', min_degree,
             '--max-degree', max_degree,
             '--min-diameter', min_diameter,
             '--max-diameter', max_diameter,
+            '--min-scc', min_scc,
+            '--max-scc', max_scc,
             '--multi-batch', multi_batch,
             '--seed', seed,
             '--input-graph', input_file_path,
