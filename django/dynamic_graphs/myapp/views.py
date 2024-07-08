@@ -169,6 +169,9 @@ def properties(request):
     graphs = []
     for file in os.listdir(properties_directory):
         json_file_path = os.path.join(properties_directory, file)
+        file_ext = Path(json_file_path).suffix
+        if os.path.isdir(json_file_path): continue
+        # if file_ext == '.png': continue
         with open(json_file_path, 'r') as file:
             graph_properties = json.load(file)
 
@@ -192,6 +195,10 @@ def properties(request):
         
         # Add image path to graph properties
         graph_properties['adjacency_matrix_image'] = os.path.join(settings.MEDIA_URL, 'adjacency_matrices', img_filename)
+
+        # Add SVD statistics image path to graph properties
+        svd_filename = f"svd_statistics_{file.name.split(os.sep)[-1].split('_')[-1]}.png"
+        graph_properties['svd_statistics'] = os.path.join(settings.MEDIA_URL, 'properties/svd', svd_filename)
         graphs.append([int(file.name.split(os.sep)[-1].split('_')[-1]), graph_properties])
     context = {'graphs': sorted(graphs)}
     return render(request, 'properties.html', context)
