@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Graph Generator - Instructions</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #007bff, #00bfff);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .container {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+        .instruction-header {
+            margin-bottom: 20px;
+        }
+        .instruction-section {
+            margin-bottom: 20px;
+        }
+        .instruction-section h4 {
+            margin-bottom: 10px;
+        }
+        .instruction-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .instruction-section li {
+            margin-bottom: 10px;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .card-body {
+            padding: 2rem;
+        }
+        .card-body p, .card-body ul {
+            font-size: 1.1rem;
+        }
+        .input-container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <a class="navbar-brand" href="/">Dynamic Graph Generator</a>
+        <div class="ml-auto">
+            <a href="/login" class="nav-link d-inline-block me-2">Login</a>
+            <a href="/register" class="nav-link d-inline-block">Register</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="instruction-header text-center">
+            <h1>Welcome to the Dynamic Graph Generator Tool</h1>
+            <p class="lead">Follow the instructions below to use the tool effectively.</p>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="input-container instruction-section">
+                    <h4>1. Graph Type</h4>
+                    <p>Select the type of the graph you want to generate. Options include:</p>
+                    <ul>
+                        <li><strong>Directed:</strong> The graph will have directed edges.</li>
+                        <li><strong>Undirected:</strong> The graph will have undirected edges.</li>
+                    </ul>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>2. Input Graph</h4>
+                    <p>Specify the path to the input static graph file and select the format of the file. Supported formats are:</p>
+                    <ul>
+                        <li>Matrix Market</li>
+                    </ul>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>3. Input Transforms</h4>
+                    <p>Select transformations to apply to the input graph. Available options are:</p>
+                    <ul>
+                        <li>Transpose</li>
+                        <li>Symmetrize</li>
+                    </ul>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>5. Batch Size</h4>
+                    <p>Specify the size of each batch update in absolute terms or as a fraction of the total edges. Example:</p>
+                    <ul>
+                        <li><strong>Batch Size:</strong> Absolute number of edges in each batch.</li>
+                        <li><strong>Batch Size Ratio:</strong> Fraction of the total edges (e.g., 0.001).</li>
+                    </ul>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>6. Edge and Vertex Operations</h4>
+                    <p>Specify the percentage of edge/vertex insertions and deletions in each batch. You can also allow duplicate edge/vertex operations within a batch.</p>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>7. Update Nature</h4>
+                    <p>Specify the nature of the batch updates:</p>
+                    <ul>
+                        <li><strong>Uniform:</strong> Uniformly random updates.</li>
+                        <li><strong>Preferential:</strong> Preferential attachment model.</li>
+                    </ul>
+                    <p>You can also define a custom probability distribution function for the batch updates.</p>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>8. Constraints</h4>
+                    <p>Specify constraints to maintain the properties of the graph:</p>
+                    <ul>
+                        <li><strong>Min/Max Degree:</strong> Ensure the degree of nodes remains within the specified range.</li>
+                        <li><strong>Min/Max Diameter:</strong> Ensure the diameter of the graph stays within the specified range.</li>
+                        <li><strong>Min/Max SCC:</strong> Ensure the number of strongly connected components stays within the specified range.</li>
+                        <li><strong>Min/Max BCC:</strong> Ensure the number of bi-connected components stays within the specified range.</li>
+                    </ul>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>9. Multi-Batch Updates</h4>
+                    <p>Specify the number of contiguous batch updates to generate.</p>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>10. Miscellaneous</h4>
+                    <ul>
+                        <li><strong>Seed:</strong> Seed for the random number generator (for reproducibility).</li>
+                    </ul>
+                </div>
+                <div class="input-container instruction-section">
+                    <h4>Compulsory Options</h4>
+                    <p>The following options are compulsory and must be provided:</p>
+                    <ul>
+                        <li>Either <strong>Update Nature</strong> or <strong>Probability Distribution</strong> must be given.</li>
+                        <li>Either <strong>Batch Size</strong> or <strong>Batch Size Ratio</strong> must be given.</li>
+                        <li>Either a <strong>Custom Graph</strong> must be uploaded or a <strong>Pre-existing Graph</strong> must be selected.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

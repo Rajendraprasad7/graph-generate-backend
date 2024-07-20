@@ -9,35 +9,50 @@
         body {
             background-color: #f8f9fa;
         }
+        .navbar {
+            background: linear-gradient(45deg, #007bff, #00bfff);
+        }
+        .navbar-brand {
+            color: white !important;
+        }
         .container {
             margin-top: 20px;
-            max-width: 80%;
+            max-width: 90%;
         }
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         .btn-primary {
             width: 100%;
+            background: linear-gradient(45deg, #007bff, #00bfff);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #0056b3, #0099cc);
+        }
+        .custom-file-label::after {
+            content: "Browse";
         }
         .download-link {
-            margin-top: 10px;
+            margin-top: 20px;
             text-align: center;
         }
     </style>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <a class="navbar-brand" href="/">Dynamic Graph Generator</a>
+        <div class="ml-auto">
+            <a href="{% url 'logout' %}" class="btn btn-light">Logout</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-            <div class="container-fluid d-flex justify-content-between align-items-center">
-                <h1 class="navbar-brand m-0">Dynamic Graph Generator</h1>
-                <a href="{% url 'logout' %}" class="btn btn-light me-2">Logout</a>
-            </div>
-        </nav>
         <form method="POST" action="/" enctype="multipart/form-data" class="border p-4 rounded shadow">
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="update-nature" class="mr-2">Update Nature:</label>
+                <div class="form-group col-md-3">
+                    <label for="update-nature">Update Nature:</label>
                     <select name="update-nature" class="form-control" id="update-nature">
                         <option value="">None</option>
                         <option value="uniform">Uniform</option>
@@ -46,73 +61,73 @@
                         <option value="exponential">Exponential</option>
                     </select>
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="batch-size" class="mr-2">Batch Size:</label>
+                <div class="form-group col-md-3">
+                    <label for="batch-size">Batch Size:</label>
                     <input type="number" name="batch-size" class="form-control" id="batch-size" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="batch-size-ratio" class="mr-2">Batch Size Ratio:</label>
+                <div class="form-group col-md-3">
+                    <label for="batch-size-ratio">Batch Size Ratio:</label>
                     <input type="number" name="batch-size-ratio" class="form-control" id="batch-size-ratio" min="0" max="1" step="0.000001">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="edge-insertions" class="mr-2">Edge Insertions:</label>
-                    <input type="number" name="edge-insertions" class="form-control" id="edge-insertions" min="0" max="1" step="0.000001">
+                <div class="form-group col-md-3">
+                    <label for="edge-insertions">Edge Insertions:</label>
+                    <input type="number" name="edge-insertions" class="form-control" id="edge-insertions" min="0" step="1">
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="edge-deletions" class="mr-2">Edge Deletions:</label>
-                    <input type="number" name="edge-deletions" class="form-control" id="edge-deletions" min="0" max="1" step="0.000001">
+                <div class="form-group col-md-3">
+                    <label for="edge-deletions">Edge Deletions:</label>
+                    <input type="number" name="edge-deletions" class="form-control" id="edge-deletions" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="min-scc" class="mr-2">Min SCC:</label>
+                <div class="form-group col-md-3">
+                    <label for="min-scc">Min SCC:</label>
                     <input type="number" name="min-scc" class="form-control" id="min-scc" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="max-scc" class="mr-2">Max SCC:</label>
+                <div class="form-group col-md-3">
+                    <label for="max-scc">Max SCC:</label>
                     <input type="number" name="max-scc" class="form-control" id="max-scc" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="vertex-growth-rate" class="mr-2">Vertex Growth Rate:</label>
+                <div class="form-group col-md-3">
+                    <label for="vertex-growth-rate">Vertex Growth Rate:</label>
                     <input type="number" name="vertex-growth-rate" class="form-control" id="vertex-growth-rate" min="0" step="0.000001">
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="min-degree" class="mr-2">Min Degree:</label>
+                <div class="form-group col-md-3">
+                    <label for="min-degree">Min Degree:</label>
                     <input type="number" name="min-degree" class="form-control" id="min-degree" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="max-degree" class="mr-2">Max Degree:</label>
+                <div class="form-group col-md-3">
+                    <label for="max-degree">Max Degree:</label>
                     <input type="number" name="max-degree" class="form-control" id="max-degree" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="min-diameter" class="mr-2">Min Diameter:</label>
+                <div class="form-group col-md-3">
+                    <label for="min-diameter">Min Diameter:</label>
                     <input type="number" name="min-diameter" class="form-control" id="min-diameter" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="max-diameter" class="mr-2">Max Diameter:</label>
+                <div class="form-group col-md-3">
+                    <label for="max-diameter">Max Diameter:</label>
                     <input type="number" name="max-diameter" class="form-control" id="max-diameter" min="0" step="1">
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="multi-batch" class="mr-2">Batch Count:</label>
+                <div class="form-group col-md-3">
+                    <label for="multi-batch">Batch Count:</label>
                     <input type="number" name="multi-batch" class="form-control" id="multi-batch" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="seed" class="mr-2">Seed:</label>
+                <div class="form-group col-md-3">
+                    <label for="seed">Seed:</label>
                     <input type="number" name="seed" class="form-control" id="seed" min="0" step="1">
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="input-format" class="mr-2">Input Format:</label>
+                <div class="form-group col-md-3">
+                    <label for="input-format">Input Format:</label>
                     <select name="input-format" class="form-control" id="input-format">
                         <option value="matrix-market">Matrix Market</option>
                         <option value="snap-temporal">Snap Temporal</option>
                         <option value="edgelist">Edgelist</option>
                     </select>
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
+                <div class="form-group col-md-3">
                     <label for="input-transform">Input Transforms:</label>
                     <select name="input-transform" class="form-control" id="input-transform">
                         <option value="">None</option>
@@ -127,17 +142,17 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="output-format" class="mr-2">Output Format:</label>
+                <div class="form-group col-md-3">
+                    <label for="output-format">Output Format:</label>
                     <select name="output-format" class="form-control" id="output-format">
                         <option value="edgelist">Edgelist</option>
                     </select>
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
-                    <label for="probability-distribution" class="mr-2">Probability Distribution f(x):</label>
+                <div class="form-group col-md-3">
+                    <label for="probability-distribution">Probability Distribution f(x):</label>
                     <textarea name="probability-distribution" class="form-control" id="probability-distribution" rows="1"></textarea>
                 </div>      
-                <div class="form-group col-6 col-md-4 col-lg-3">
+                <div class="form-group col-md-3">
                     <label for="graph-type">Graph Type:</label>
                     <select name="graph-type" class="form-control" id="graph-type">
                         <option value="directed">Directed</option>
@@ -146,35 +161,34 @@
                 </div>            
             </div>
             <div class="form-row">
-                <div class="form-group col-6 col-md-4 col-lg-3">
+                <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" name="allow-duplicate-edges" class="form-check-input" id="allow-duplicate-edges">
                         <label for="allow-duplicate-edges" class="form-check-label">Allow Duplicate Edges</label>
                     </div>
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
+                <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" name="allow-duplicate-vertices" class="form-check-input" id="allow-duplicate-vertices">
                         <label for="allow-duplicate-vertices" class="form-check-label">Allow Duplicate Vertices</label>
                     </div>
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
+                <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" name="preserve-degree-distribution" class="form-check-input" id="preserve-degree-distribution">
                         <label for="preserve-degree-distribution" class="form-check-label">Preserve Degree Distribution</label>
                     </div>
                 </div>
-                <div class="form-group col-6 col-md-4 col-lg-3">
+                <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" name="preserve-communities" class="form-check-input" id="preserve-communities">
                         <label for="preserve-communities" class="form-check-label">Preserve Communities</label>
                     </div>
                 </div>
             </div>
-
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="graph-file" class="mr-2">Select Graph:</label>
+                    <label for="graph-file">Select Graph:</label>
                     <select name="graph-file" class="form-control" id="graph-file">
                         <option value="">None</option>
                         {% for file in graph_files %}
@@ -183,14 +197,13 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6">
-                    <label for="file" class="mr-2">Custom Graph:</label>
+                    <label for="file">Custom Graph:</label>
                     <div class="custom-file">
                         <input type="file" name="file" class="custom-file-input" id="file">
                         <label class="custom-file-label" for="file">Choose file</label>
                     </div>
                 </div>
             </div>
-            
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
 
