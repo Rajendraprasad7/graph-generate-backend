@@ -39,69 +39,90 @@
             margin-top: 20px;
             max-width: 100%;
         }
+        .row-eq-height {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .row-eq-height > [class*='col-'] {
+            display: flex;
+            flex-direction: column;
+        }
+        .row-eq-height .img-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .row-eq-height img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
-        <nav class="navbar navbar-expand-lg navbar-dark mb-4">
-            <div class="container-fluid d-flex justify-content-between align-items-center">
-                <h1 class="navbar-brand m-0">Review Graph Properties</h1>
-                <div>
-                    <a href="{% url 'download' %}" class="btn ">Download</a>
-                    <a href="{% url 'home' %}" class="btn  ">Back</a>
-                    <a href="{% url 'logout' %}" class="btn ">Logout</a>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <h1 class="navbar-brand m-0">Review Graph Properties</h1>
+            <div>
+                <a href="{% url 'download' %}" class="btn ">Download</a>
+                <a href="{% url 'home' %}" class="btn  ">Back</a>
+                <a href="{% url 'logout' %}" class="btn ">Logout</a>
             </div>
-        </nav>
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-            {% for file_name, properties in graphs %}
-                <div class="col">
-                    <div class="card h-100 {% if properties.satisfyConstraints == 1 %}bg-success bg-opacity-25{% elif properties.satisfyConstraints == 0 %}bg-danger bg-opacity-25{% endif %}">
-                        <div class="card-header">
-                            {{ file_name }}
+        </div>
+    </nav>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for file_name, properties in graphs %}
+            <div class="col">
+                <div class="card h-100 {% if properties.satisfyConstraints == 1 %}bg-success bg-opacity-25{% elif properties.satisfyConstraints == 0 %}bg-danger bg-opacity-25{% endif %}">
+                    <div class="card-header">
+                        {{ file_name }}
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <p><strong>Order:</strong> {{ properties.order }}</p>
+                                <p><strong>Size:</strong> {{ properties.size }}</p>
+                                <p><strong>Density:</strong> {{ properties.density }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Min Degree:</strong> {{ properties.degree.min }}</p>
+                                <p><strong>Max Degree:</strong> {{ properties.degree.max }}</p>
+                                <p><strong>Avg Degree:</strong> {{ properties.degree.avg }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>SCC:</strong> {{ properties.scc }}</p>
+                                <p><strong>Diameter:</strong> {{ properties.diameter }}</p>
+                                <p><strong>KL Div:</strong> {{ properties.KLD }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>BCC:</strong> {{ properties.bcc }}</p>
+                            </div>
                         </div>
-                        <div class="card-body d-flex flex-column">
-                            <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <p><strong>Order:</strong> {{ properties.order }}</p>
-                                    <p><strong>Size:</strong> {{ properties.size }}</p>
-                                    <p><strong>Density:</strong> {{ properties.density }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p><strong>Min Degree:</strong> {{ properties.degree.min }}</p>
-                                    <p><strong>Max Degree:</strong> {{ properties.degree.max }}</p>
-                                    <p><strong>Avg Degree:</strong> {{ properties.degree.avg }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p><strong>SCC:</strong> {{ properties.scc }}</p>
-                                    <p><strong>Diameter:</strong> {{ properties.diameter }}</p>
-                                    <p><strong>KL Div:</strong> {{ properties.KLD }}</p>
-                                </div>
-                                <div class="col-md-4">
-                                    <p><strong>BCC:</strong> {{ properties.bcc }}</p>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <canvas id="degreeDistributionChart_{{ forloop.counter }}" class="w-100"></canvas>
+                            </div>
+                        </div>
+                        <div class="row row-eq-height mb-3">
+                            <div class="col-md-6">
+                                <h5>Adjacency Matrix</h5>
+                                <div class="img-container">
+                                    <img src="{{ properties.adjacency_matrix_image }}" alt="Adjacency Matrix" class="border border-dark">
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <canvas id="degreeDistributionChart_{{ forloop.counter }}" class="w-100"></canvas>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <h5>Adjacency Matrix</h5>
-                                    <img src="{{ properties.adjacency_matrix_image }}" alt="Adjacency Matrix" class="img-fluid border border-dark">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-12">
-                                    <h5>SVD Statistics</h5>
-                                    <img src="{{ properties.svd_statistics }}" alt="SVD stats" class="img-fluid border border-dark">
+                            <div class="col-md-6">
+                                <h5>SVD Statistics</h5>
+                                <div class="img-container">
+                                    <img src="{{ properties.svd_statistics }}" alt="SVD stats" class="border border-dark">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+        {% endfor %}
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

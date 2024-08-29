@@ -66,12 +66,59 @@ def plot_singular_values(singular_values, adj_matrix, mainname):
     plt.grid(True)
     plt.savefig(root)
 
+def find_bcc_count(adj_matrix, n):
+    index = [0]  # Time of discovery of a node during DFS
+    low = [-1] * n  # Lowest point that can be reached from a node
+    disc = [-1] * n  # Discovery times of nodes
+    parent = [-1] * n  # Parent nodes in DFS tree
+    bcc_count = 0
+    stack = []
+
+    def dfs(u):
+        nonlocal bcc_count
+        disc[u] = low[u] = index[0]
+        index[0] += 1
+        children = 0
+
+        for v in range(n):
+            if adj_matrix[u, v] > 0:
+                if disc[v] == -1:
+                    parent[v] = u
+                    children += 1
+                    stack.append((u, v))
+                    dfs(v)
+
+                    low[u] = min(low[u], low[v])
+
+                    if (parent[u] == -1 and children > 1) or (parent[u] != -1 and low[v] >= disc[u]):
+                        bcc_count += 1
+                        while stack and stack[-1] != (u, v):
+                            stack.pop()
+                        if stack:
+                            stack.pop()
+                elif v != parent[u] and disc[v] < disc[u]:
+                    low[u] = min(low[u], disc[v])
+                    stack.append((u, v))
+
+    for i in range(n):
+        if disc[i] == -1:
+            dfs(i)
+        if stack:
+            bcc_count += 1
+            while stack:
+                stack.pop()
+
+    return bcc_count
+
 def main(args):
     filename = args
     adj_matrix, n = read_graph(filename[0])
-    k = min(n - 1, 100) 
+    k = min(n - 1, 100)  
     singular_values, u, vt = perform_svd(adj_matrix, k)
     plot_singular_values(singular_values, adj_matrix, args[1])
+    bcc_count = find_bcc_count(adj_matrix, n)
+    print(bcc_count)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
