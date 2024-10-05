@@ -41,8 +41,10 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <!-- <a class="navbar-brand" href="/"><i class="fas fa-project-diagram me-2"></i>Dynamic Graph Generator</a> -->
         <a class="navbar-brand" href="/">Dynamic Graph Generator</a>
         <div class="ml-auto">
+            <a href="{% url 'instructions' %}" class="btn btn-light">Help</a>
             <a href="{% url 'logout' %}" class="btn btn-light">Logout</a>
         </div>
     </nav>
@@ -52,12 +54,18 @@
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-3">
+                    <label for="graph-type">Graph Type:</label>
+                    <select name="graph-type" class="form-control" id="graph-type">
+                        <option value="directed">Directed</option>
+                        <option value="undirected">Undirected</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
                     <label for="update-nature">Update Nature:</label>
                     <select name="update-nature" class="form-control" id="update-nature">
                         <option value="">None</option>
                         <option value="uniform">Uniform</option>
                         <option value="preferential">Preferential</option>
-                        <option value="power-law">Power Law</option>
                         <option value="exponential">Exponential</option>
                     </select>
                 </div>
@@ -67,32 +75,36 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="batch-size-ratio">Batch Size Ratio:</label>
-                    <input type="number" name="batch-size-ratio" class="form-control" id="batch-size-ratio" min="0" max="1" step="0.000001">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="edge-insertions">Edge Insertions:</label>
-                    <input type="number" name="edge-insertions" class="form-control" id="edge-insertions" min="0" step="1">
+                    <input type="number" name="batch-size-ratio" class="form-control" id="batch-size-ratio" min="0" max="1" step="any">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-3">
-                    <label for="edge-deletions">Edge Deletions:</label>
-                    <input type="number" name="edge-deletions" class="form-control" id="edge-deletions" min="0" step="1">
+                    <label for="edge-insertions">Edge Insertions:</label>
+                    <input type="number" name="edge-insertions" class="form-control" id="edge-insertions" min="0" step="any">
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="min-scc">Min SCC:</label>
+                    <label for="edge-deletions">Edge Deletions:</label>
+                    <input type="number" name="edge-deletions" class="form-control" id="edge-deletions" min="0" step="any">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="min-scc">Min SCC/CC:</label>
                     <input type="number" name="min-scc" class="form-control" id="min-scc" min="0" step="1">
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="max-scc">Max SCC:</label>
+                    <label for="max-scc">Max SCC/CC:</label>
                     <input type="number" name="max-scc" class="form-control" id="max-scc" min="0" step="1">
-                </div>
-                <div class="form-group col-md-3">
-                    <label for="vertex-growth-rate">Vertex Growth Rate:</label>
-                    <input type="number" name="vertex-growth-rate" class="form-control" id="vertex-growth-rate" min="0" step="0.000001">
                 </div>
             </div>
             <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="min-bcc">Min BCC:</label>
+                    <input type="number" name="min-bcc" class="form-control" id="min-bcc" min="0" step="1">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="max-bcc">Max BCC:</label>
+                    <input type="number" name="max-bcc" class="form-control" id="max-bcc" min="0" step="1">
+                </div>
                 <div class="form-group col-md-3">
                     <label for="min-degree">Min Degree:</label>
                     <input type="number" name="min-degree" class="form-control" id="min-degree" min="0" step="1">
@@ -101,6 +113,8 @@
                     <label for="max-degree">Max Degree:</label>
                     <input type="number" name="max-degree" class="form-control" id="max-degree" min="0" step="1">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group col-md-3">
                     <label for="min-diameter">Min Diameter:</label>
                     <input type="number" name="min-diameter" class="form-control" id="min-diameter" min="0" step="1">
@@ -109,8 +123,6 @@
                     <label for="max-diameter">Max Diameter:</label>
                     <input type="number" name="max-diameter" class="form-control" id="max-diameter" min="0" step="1">
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-3">
                     <label for="multi-batch">Batch Count:</label>
                     <input type="number" name="multi-batch" class="form-control" id="multi-batch" min="0" step="1">
@@ -119,12 +131,12 @@
                     <label for="seed">Seed:</label>
                     <input type="number" name="seed" class="form-control" id="seed" min="0" step="1">
                 </div>
+            </div>
+            <div class="form-row">
                 <div class="form-group col-md-3">
                     <label for="input-format">Input Format:</label>
                     <select name="input-format" class="form-control" id="input-format">
                         <option value="matrix-market">Matrix Market</option>
-                        <option value="snap-temporal">Snap Temporal</option>
-                        <option value="edgelist">Edgelist</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
@@ -132,16 +144,9 @@
                     <select name="input-transform" class="form-control" id="input-transform">
                         <option value="">None</option>
                         <option value="transpose">Transpose</option>
-                        <option value="unsymmetrize">Unsymmetrize</option>
                         <option value="symmetrize">Symmetrize</option>
-                        <option value="loop-deadends">Loop Deadends</option>
-                        <option value="loop-vertices">Loop Vertices</option>
-                        <option value="clear-weights">Clear Weights</option>
-                        <option value="set-weights">Set Weights</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-row">
                 <div class="form-group col-md-3">
                     <label for="output-format">Output Format:</label>
                     <select name="output-format" class="form-control" id="output-format">
@@ -151,41 +156,9 @@
                 <div class="form-group col-md-3">
                     <label for="probability-distribution">Probability Distribution f(x):</label>
                     <textarea name="probability-distribution" class="form-control" id="probability-distribution" rows="1"></textarea>
-                </div>      
-                <div class="form-group col-md-3">
-                    <label for="graph-type">Graph Type:</label>
-                    <select name="graph-type" class="form-control" id="graph-type">
-                        <option value="directed">Directed</option>
-                        <option value="undirected">Undirected</option>
-                    </select>
-                </div>            
+                </div>           
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-3">
-                    <div class="form-check">
-                        <input type="checkbox" name="allow-duplicate-edges" class="form-check-input" id="allow-duplicate-edges">
-                        <label for="allow-duplicate-edges" class="form-check-label">Allow Duplicate Edges</label>
-                    </div>
-                </div>
-                <div class="form-group col-md-3">
-                    <div class="form-check">
-                        <input type="checkbox" name="allow-duplicate-vertices" class="form-check-input" id="allow-duplicate-vertices">
-                        <label for="allow-duplicate-vertices" class="form-check-label">Allow Duplicate Vertices</label>
-                    </div>
-                </div>
-                <div class="form-group col-md-3">
-                    <div class="form-check">
-                        <input type="checkbox" name="preserve-degree-distribution" class="form-check-input" id="preserve-degree-distribution">
-                        <label for="preserve-degree-distribution" class="form-check-label">Preserve Degree Distribution</label>
-                    </div>
-                </div>
-                <div class="form-group col-md-3">
-                    <div class="form-check">
-                        <input type="checkbox" name="preserve-communities" class="form-check-input" id="preserve-communities">
-                        <label for="preserve-communities" class="form-check-label">Preserve Communities</label>
-                    </div>
-                </div>
-            </div>
+            
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="graph-file">Select Graph:</label>
@@ -213,15 +186,90 @@
             </div>
         {% endif %}
     </div>
+    <footer class="bg-light text-center text-lg-start mt-5">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2024 Dynamic Graph Generator. All rights reserved.
+        </div>
+    </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-        $(".custom-file-input").on("change", function() {
-            var fileName = $(this).val().split("\\").pop();
-            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        $(document).ready(function() {
+            function updateUI() {
+                var graphType = $("#graph-type").val();
+                var batchSize = $("#batch-size").val();
+                var batchSizeRatio = $("#batch-size-ratio").val();
+                var edgeInsertions = $("#edge-insertions").val();
+                var edgeDeletions = $("#edge-deletions").val();
+                var graphFile = $("#graph-file").val();
+                var customFile = $("#file").val();
+                var updateNature = $("#update-nature").val();
+                var probabilityDistribution = $("#probability-distribution").val();
+
+                // Handle directed/undirected graph selection
+                if (graphType === "directed") {
+                    $("#min-bcc, #max-bcc, #min-diameter, #max-diameter").prop("disabled", true);
+                    $("label[for='min-scc']").text("Min SCC:");
+                    $("label[for='max-scc']").text("Max SCC:");
+                } else {
+                    $("#min-bcc, #max-bcc, #min-diameter, #max-diameter").prop("disabled", false);
+                    $("label[for='min-scc']").text("Min CC:");
+                    $("label[for='max-scc']").text("Max CC:");
+                }
+
+                // Handle update nature and probability distribution
+                if (updateNature) {
+                    $("#probability-distribution").prop("disabled", true);
+                } else if (probabilityDistribution) {
+                    $("#update-nature").prop("disabled", true);
+                } else {
+                    $("#update-nature, #probability-distribution").prop("disabled", false);
+                }
+
+                // Handle batch size and batch size ratio
+                if (batchSize) {
+                    $("#batch-size-ratio").prop("disabled", true);
+                } else if (batchSizeRatio) {
+                    $("#batch-size").prop("disabled", true);
+                } else {
+                    $("#batch-size, #batch-size-ratio").prop("disabled", false);
+                }
+
+                // Handle edge insertions and deletions
+                if (edgeInsertions) {
+                    $("#edge-deletions").prop("disabled", true);
+                } else if (edgeDeletions) {
+                    $("#edge-insertions").prop("disabled", true);
+                } else {
+                    $("#edge-insertions, #edge-deletions").prop("disabled", false);
+                }
+
+                // Handle graph file selection and custom upload
+                if (graphFile) {
+                    $("#file").prop("disabled", true);
+                } else if (customFile) {
+                    $("#graph-file").prop("disabled", true);
+                } else {
+                    $("#graph-file, #file").prop("disabled", false);
+                }
+            }
+
+            // Attach event listeners
+            $("#graph-type, #batch-size, #batch-size-ratio, #edge-insertions, #edge-deletions, #graph-file, #file, #update-nature, #probability-distribution").on("change", updateUI);
+
+            // Initial UI update
+            updateUI();
+
+            // Custom file input
+            $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                updateUI();
+            });
         });
+
         function hideDownloadLink() {
             $(".download-link").hide();
         }

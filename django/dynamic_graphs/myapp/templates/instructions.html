@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Graph Generator - Instructions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(45deg, #007bff, #00bfff);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .container {
+            max-width: 1000px;
+        }
+        .instruction-header {
+            margin-bottom: 30px;
+        }
+        .instruction-section {
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .instruction-section h4 {
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .instruction-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .instruction-section li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+        }
+        .instruction-section li::before {
+            content: "\f105";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-project-diagram me-2"></i>Dynamic Graph Generator</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Generator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register"><i class="fas fa-user-plus me-1"></i>Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="instruction-header text-center">
+            <h1>Welcome to the Dynamic Graph Generator Tool</h1>
+            <p class="lead">Follow the instructions below to use the tool effectively.</p>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-chart-network me-2"></i>1. Graph Type</h4>
+            <p>Select the type of the graph you want to generate. Options include:</p>
+            <ul>
+                <li><strong>Directed:</strong> The graph will have directed edges.</li>
+                <li><strong>Undirected:</strong> The graph will have undirected edges.</li>
+            </ul>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-file-import me-2"></i>2. Input Graph</h4>
+            <p>Either choose an available graph or upload a custom graph. Supported formats are:</p>
+            <ul>
+                <li>Matrix Market</li>
+            </ul>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-random me-2"></i>3. Input Transforms</h4>
+            <p>Select transformations to apply to the input graph. Available options are:</p>
+            <ul>
+                <li>Transpose</li>
+                <li>Symmetrize</li>
+            </ul>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-layer-group me-2"></i>4. Batch Size</h4>
+            <p>Specify the size of each batch update in absolute terms or as a fraction of the total edges. Example:</p>
+            <ul>
+                <li><strong>Batch Size:</strong> Absolute number of edges in each batch.</li>
+                <li><strong>Batch Size Ratio:</strong> Fraction of the total edges (e.g., 0.001).</li>
+            </ul>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-exchange-alt me-2"></i>5. Edge Operations</h4>
+            <p>Specify the percentage of edge insertions and deletions in each batch.</p>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-sliders-h me-2"></i>6. Update Nature</h4>
+            <p>Specify the nature of the batch updates:</p>
+            <ul>
+                <li><strong>Uniform:</strong> Uniformly random updates.</li>
+                <li><strong>Preferential:</strong> Preferential attachment model.</li>
+                <li><strong>Exponential:</strong> Exponential distribution based update.</li>
+            </ul>
+            <p>You can also define a custom probability distribution function for the batch updates.</p>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-balance-scale me-2"></i>7. Constraints</h4>
+            <p>Specify constraints to maintain the properties of the graph:</p>
+            <ul>
+                <li><strong>Min/Max Degree:</strong> Ensure the degree of nodes remains within the specified range.</li>
+                <li><strong>Min/Max Diameter:</strong> Ensure the diameter of the graph stays within the specified range.</li>
+                <li><strong>Min/Max SCC:</strong> Ensure the number of strongly connected components stays within the specified range.</li>
+                <li><strong>Min/Max BCC:</strong> Ensure the number of bi-connected components stays within the specified range.</li>
+            </ul>
+            If all the constraints are satisfied, the graph will be highlighted in green; otherwise, it will be highlighted in red.
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-list-ol me-2"></i>8. Multi-Batch Updates</h4>
+            <p>Specify the number of contiguous batch updates to generate.</p>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-cog me-2"></i>9. Miscellaneous</h4>
+            <ul>
+                <li><strong>Seed:</strong> Seed for the random number generator (for reproducibility).</li>
+            </ul>
+        </div>
+
+        <div class="instruction-section">
+            <h4><i class="fas fa-exclamation-triangle me-2"></i>Compulsory Options</h4>
+            <p>The following options are compulsory and must be provided:</p>
+            <ul>
+                <li>Either <strong>Update Nature</strong> or <strong>Probability Distribution</strong> must be given.</li>
+                <li>Either <strong>Batch Size</strong> or <strong>Batch Size Ratio</strong> must be given.</li>
+                <li>Either a <strong>Custom Graph</strong> must be uploaded or a <strong>Pre-existing Graph</strong> must be selected.</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-lg-start mt-5">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+            © 2024 Dynamic Graph Generator. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

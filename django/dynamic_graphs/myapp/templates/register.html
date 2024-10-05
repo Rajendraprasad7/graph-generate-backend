@@ -72,6 +72,12 @@
                 </div>
             </div>
             <div class="form-group row">
+                <label for="{{ form.password1.id_for_organization }}" class="col-sm-4 col-form-label form-label">{{ form.organization.label }}</label>
+                <div class="col-sm-8">
+                    {{ form.organization }}
+                </div>
+            </div>
+            <div class="form-group row">
                 <label for="{{ form.password1.id_for_label }}" class="col-sm-4 col-form-label form-label">{{ form.password1.label }}</label>
                 <div class="col-sm-8">
                     {{ form.password1 }}

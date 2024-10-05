@@ -26,7 +26,7 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('download/', views.download, name='download'),
     path('properties/', views.properties, name='properties'),
-    path('index/', views.index, name='index'),
+    path('instructions/', views.instructions, name='instructions'),
     path('', views.home, name='home'),
 ]
 

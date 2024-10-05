@@ -42,32 +42,25 @@ def home(request):
     graph_files = os.listdir(graphs_directory)
     context = {'graph_files': graph_files}
     if request.method == 'POST':
-        update_nature = request.POST['update-nature']
-        batch_size = request.POST['batch-size']
-        batch_size_ratio = request.POST['batch-size-ratio']
-        edge_insertions = request.POST['edge-insertions']
-        edge_deletions = request.POST['edge-deletions']
-        allow_duplicate_edges = 'checked' if 'allow-duplicate-edges' in request.POST else 'unchecked'
-        # vertex_insertions = request.POST['vertex-insertions']
-        # vertex_deletions = request.POST['vertex-deletions']
-        vertex_growth_rate = request.POST['vertex-growth-rate']
-        allow_duplicate_vertices = 'checked' if 'allow-duplicate-vertices' in request.POST else 'unchecked'
-        min_degree = request.POST['min-degree']
-        max_degree = request.POST['max-degree']
-        min_diameter = request.POST['min-diameter']
-        max_diameter = request.POST['max-diameter']
-        min_scc = request.POST['min-scc']
-        max_scc = request.POST['max-scc']
-        preserve_degree_distribution = 'checked' if 'preserve-degree-distribution' in request.POST else 'unchecked'
-        preserve_communities = 'checked' if 'preserve-communities' in request.POST else 'unchecked'
-        multi_batch = request.POST['multi-batch']
-        seed = request.POST['seed']
-        output_format = request.POST['output-format']
-        input_format = request.POST['input-format']
-        input_transform = request.POST['input-transform']
-        probability_distribution = '"' + request.POST['probability-distribution'] + '"'
-        input_file_name = request.POST['graph-file']
-        graph_type = request.POST['graph-type']
+        update_nature = request.POST.get('update-nature', '')
+        batch_size = request.POST.get('batch-size', '')
+        batch_size_ratio = request.POST.get('batch-size-ratio', '')
+        edge_insertions = request.POST.get('edge-insertions', '')
+        edge_deletions = request.POST.get('edge-deletions', '')
+        min_degree = request.POST.get('min-degree', '')
+        max_degree = request.POST.get('max-degree', '')
+        min_diameter = request.POST.get('min-diameter', '')
+        max_diameter = request.POST.get('max-diameter', '')
+        min_scc = request.POST.get('min-scc', '')
+        max_scc = request.POST.get('max-scc', '')
+        multi_batch = request.POST.get('multi-batch', '')
+        seed = request.POST.get('seed', '')
+        output_format = request.POST.get('output-format', '')
+        input_format = request.POST.get('input-format', '')
+        input_transform = request.POST.get('input-transform', '')
+        probability_distribution = '"' + request.POST.get('probability-distribution', '') + '"'
+        input_file_name = request.POST.get('graph-file', '')
+        graph_type = request.POST.get('graph-type', '')
 
         properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
         if os.path.exists(properties_directory):
@@ -115,9 +108,6 @@ def home(request):
             '--batch-size-ratio', batch_size_ratio,
             '--edge-insertions', edge_insertions,
             '--edge-deletions', edge_deletions,
-            # '--vertex-insertions', vertex_insertions,
-            # '--vertex-deletions', vertex_deletions,
-            '--vertex-growth-rate', vertex_growth_rate,
             '--min-degree', min_degree,
             '--max-degree', max_degree,
             '--min-diameter', min_diameter,
@@ -144,14 +134,8 @@ def home(request):
                 clean_args.append(args[i])
                 clean_args.append(args[i + 1])
 
-        if allow_duplicate_edges == 'checked':
-            clean_args.append('--allow-duplicate-edges')
-        if allow_duplicate_vertices == 'checked':
-            clean_args.append('--allow-duplicate-vertices')
-        if preserve_degree_distribution == 'checked':
-            clean_args.append('--preserve-degree-distribution')
-        if preserve_communities == 'checked':
-            clean_args.append('--preserve-communities')
+        # Store graph_type in the session
+        request.session['graph_type'] = graph_type
 
         command = " ".join(clean_args)
         print("command: ", command)
@@ -195,12 +179,12 @@ def properties(request):
         
         # Add image path to graph properties
         graph_properties['adjacency_matrix_image'] = os.path.join(settings.MEDIA_URL, 'adjacency_matrices', img_filename)
-
+        graph_properties["KLD"] = max(graph_properties.get('KLD', 0), 0)
         # Add SVD statistics image path to graph properties
         svd_filename = f"svd_statistics_{file.name.split(os.sep)[-1].split('_')[-1]}.png"
         graph_properties['svd_statistics'] = os.path.join(settings.MEDIA_URL, 'properties/svd', svd_filename)
         graphs.append([int(file.name.split(os.sep)[-1].split('_')[-1]), graph_properties])
-    context = {'graphs': sorted(graphs)}
+    context = {'graphs': sorted(graphs), 'graph_type': request.session['graph_type']}
     return render(request, 'properties.html', context)
 
 @login_required
@@ -243,5 +227,5 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
-def index(request):
-    return render(request, 'index.html')
+def instructions(request):
+    return render(request, 'instructions.html')

@@ -91,13 +91,22 @@
                                 <p><strong>Avg Degree:</strong> {{ properties.degree.avg }}</p>
                             </div>
                             <div class="col-md-4">
-                                <p><strong>SCC:</strong> {{ properties.scc }}</p>
-                                <p><strong>Diameter:</strong> {{ properties.diameter }}</p>
+                                {% if graph_type == 'undirected' %}
+                                    <p><strong>CC:</strong> {{ properties.scc }}</p>
+                                {% else %}
+                                    <p><strong>SCC:</strong> {{ properties.scc }}</p>
+                                {% endif %}
+                                {% if graph_type == 'undirected' %}
+                                    <p><strong>Diameter:</strong> {{ properties.diameter }}</p>
+                                {% endif %}
                                 <p><strong>KL Div:</strong> {{ properties.KLD }}</p>
                             </div>
-                            <div class="col-md-4">
-                                <p><strong>BCC:</strong> {{ properties.bcc }}</p>
-                            </div>
+                            
+                            {% if graph_type == 'undirected' %}
+                                <div class="col-md-4">
+                                    <p><strong>BCC:</strong> {{ properties.bcc }}</p>
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="row mb-3">
                             <div class="col-12">
