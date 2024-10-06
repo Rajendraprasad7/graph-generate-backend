@@ -50,14 +50,15 @@
     </nav>
 
     <div class="container">
-        <form method="POST" action="/" enctype="multipart/form-data" class="border p-4 rounded shadow">
+        <form id="graphForm" method="POST" action="/" enctype="multipart/form-data" class="border p-4 rounded shadow">
+        <!-- <form method="POST" action="/" enctype="multipart/form-data" class="border p-4 rounded shadow"> -->
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-3">
                     <label for="graph-type">Graph Type:</label>
                     <select name="graph-type" class="form-control" id="graph-type">
-                        <option value="directed">Directed</option>
                         <option value="undirected">Undirected</option>
+                        <option value="directed">Directed</option>
                     </select>
                 </div>
                 <div class="form-group col-md-3">
@@ -125,7 +126,7 @@
                 </div>
                 <div class="form-group col-md-3">
                     <label for="multi-batch">Batch Count:</label>
-                    <input type="number" name="multi-batch" class="form-control" id="multi-batch" min="0" step="1">
+                    <input type="number" name="multi-batch" class="form-control" id="multi-batch" min="0" step="1" required>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="seed">Seed:</label>
@@ -267,6 +268,45 @@
                 var fileName = $(this).val().split("\\").pop();
                 $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
                 updateUI();
+            });
+             // Form submission validation
+             $("#graphForm").on("submit", function(e) {
+                e.preventDefault();
+                var errorMessage = "";
+
+
+                // Check Update Nature or Probability Distribution
+                if (!$("#update-nature").val() && !$("#probability-distribution").val()) {
+                    errorMessage += "Please provide either Update Nature or Probability Distribution.";
+                }
+
+                // Check Batch Size or Batch Size Ratio
+                if (!$("#batch-size").val() && !$("#batch-size-ratio").val()) {
+                    errorMessage += "Please provide either Batch Size or Batch Size Ratio.";
+                }
+
+                // Check Graph File or Custom Graph
+                if (!$("#graph-file").val() && !$("#file").val()) {
+                    errorMessage += "Please select a Pre-existing Graph or upload a Custom Graph.";
+                }
+
+                // Check Edge Insertions or Deletions
+                if (!$("#edge-insertions").val() && !$("#edge-deletions").val()) {
+                    errorMessage += "Please specify either Edge Insertions or Edge Deletions.";
+                }
+
+                // Check Batch Count
+                if (!$("#multi-batch").val()) {
+                    errorMessage += "Please specify Batch Count.";
+                }
+
+                if (errorMessage) {
+                    $("#error-message").html(errorMessage).show();
+                    alert(errorMessage);
+                } else {
+                    $("#error-message").hide().empty();
+                    this.submit();
+                }
             });
         });
 
