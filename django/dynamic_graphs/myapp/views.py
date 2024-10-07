@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, LoginForm
-from .models import CommandLog
+from .forms import RegisterForm
+# from .models import CommandLog
 import os
 import json
 import shutil
@@ -20,23 +20,25 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect('home')
+        else:
+            print(form.errors)
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')
-    else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form})
+# def user_login(request):
+#     if request.method == 'POST':
+#         form = LoginForm(data=request.POST)
+#         if form.is_valid():
+#             user = form.get_user()
+#             login(request, user)
+#             return redirect('home')
+#     else:
+#         form = LoginForm()
+#     return render(request, 'login.html', {'form': form})
 
-@login_required
+# @login_required
 def home(request):
     graphs_directory = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'sample_graphs')
     graph_files = os.listdir(graphs_directory)
@@ -139,15 +141,15 @@ def home(request):
 
         command = " ".join(clean_args)
         print("command: ", command)
-        command_log = CommandLog(username=request.user.username, command=command)
-        command_log.save()
+        # command_log = CommandLog(username=request.user.username, command=command)
+        # command_log.save()
         subprocess.run(command, shell=True)
         context['output_file'] = True
         return redirect('properties')
     context['output_file'] = False
     return render(request, 'home.html', context)
 
-@login_required
+# @login_required
 def properties(request):
     properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
     graphs = []
@@ -187,7 +189,7 @@ def properties(request):
     context = {'graphs': sorted(graphs), 'graph_type': request.session['graph_type']}
     return render(request, 'properties.html', context)
 
-@login_required
+# @login_required
 def download(request):
     output_directory = os.path.join(settings.MEDIA_ROOT, 'output')
     zip_file_path = output_directory + '.zip'
@@ -198,34 +200,34 @@ def download(request):
                 zipf.write(file_path, os.path.relpath(file_path, output_directory))
     return HttpResponse(open(zip_file_path, 'rb'), content_type='application/zip')
 
-@login_required
-def user_logout(request):
-    if os.path.exists(settings.MEDIA_ROOT):
-        output_directory = os.path.join(settings.MEDIA_ROOT, 'output')
-        if os.path.exists(output_directory):
-            shutil.rmtree(output_directory)
-        os.makedirs(output_directory)
+# @login_required
+# def user_logout(request):
+#     if os.path.exists(settings.MEDIA_ROOT):
+#         output_directory = os.path.join(settings.MEDIA_ROOT, 'output')
+#         if os.path.exists(output_directory):
+#             shutil.rmtree(output_directory)
+#         os.makedirs(output_directory)
 
-        if os.path.exists(output_directory + '.zip'):
-            os.remove(output_directory + '.zip')
+#         if os.path.exists(output_directory + '.zip'):
+#             os.remove(output_directory + '.zip')
 
-        uploads_directory = os.path.join(settings.MEDIA_ROOT, 'uploads')
-        if os.path.exists(uploads_directory):
-            shutil.rmtree(uploads_directory)
-        os.makedirs(uploads_directory)
+#         uploads_directory = os.path.join(settings.MEDIA_ROOT, 'uploads')
+#         if os.path.exists(uploads_directory):
+#             shutil.rmtree(uploads_directory)
+#         os.makedirs(uploads_directory)
 
-        properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
-        if os.path.exists(properties_directory):
-            shutil.rmtree(properties_directory)
-        os.makedirs(properties_directory)
+#         properties_directory = os.path.join(settings.MEDIA_ROOT, 'properties')
+#         if os.path.exists(properties_directory):
+#             shutil.rmtree(properties_directory)
+#         os.makedirs(properties_directory)
 
-        adjacencies_directory = os.path.join(settings.MEDIA_ROOT, 'adjacency_matrices')
-        if os.path.exists(adjacencies_directory):
-            shutil.rmtree(adjacencies_directory)
-        os.makedirs(adjacencies_directory)
+#         adjacencies_directory = os.path.join(settings.MEDIA_ROOT, 'adjacency_matrices')
+#         if os.path.exists(adjacencies_directory):
+#             shutil.rmtree(adjacencies_directory)
+#         os.makedirs(adjacencies_directory)
 
-    logout(request)
-    return redirect('login')
+#     logout(request)
+#     return redirect('login')
 
 def instructions(request):
     return render(request, 'instructions.html')
